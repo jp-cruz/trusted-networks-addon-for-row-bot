@@ -12,7 +12,10 @@ license = { text = "Apache-2.0" }
 authors = [{ name = "JP Cruz", email = "jp@legionforge.org" }]
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "pytest-cov>=4"]
+dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.5", "bandit>=1.7", "mypy>=1.10"]
 
 [tool.setuptools]
 py-modules = ["trust"]
+
+[tool.bandit]
+exclude_dirs = ["test_trust.py"]
