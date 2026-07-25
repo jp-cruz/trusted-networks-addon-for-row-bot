@@ -1,0 +1,8 @@
+row-bot-trusted-networks
+Copyright 2026 JP Cruz
+
+Licensed under the Apache License, Version 2.0.
+
+A reference implementation intended for potential contribution to
+https://github.com/siddsachar/row-bot, which is also licensed under the Apache
+License, Version 2.0.

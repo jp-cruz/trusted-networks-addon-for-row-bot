@@ -45,6 +45,12 @@ export ROW_BOT_TRUSTED_NETWORKS="192.0.2.0/24,198.51.100.0/24"
 (Using RFC 5737 documentation ranges here as placeholders — substitute your own
 container-runtime gateway range and/or trusted local network CIDR.)
 
+## License
+
+Apache License 2.0 (see `LICENSE`/`NOTICE`) — the same license as the upstream Row-Bot
+project, chosen deliberately so this can be contributed back with no license
+reconciliation needed.
+
 ## Status
 
 Reference implementation only — not a drop-in patch for any specific Row-Bot version.
