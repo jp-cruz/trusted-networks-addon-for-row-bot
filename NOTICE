@@ -1,7 +1,9 @@
-row-bot-trusted-networks
-Copyright 2026 JP Cruz
+trusted-networks-addon-for-row-bot
+Copyright 2026 JP Cruz <jp@legionforge.org>
 
 Licensed under the Apache License, Version 2.0.
+
+Developed with AI assistance (Claude, Anthropic) under human direction and review.
 
 A reference implementation intended for potential contribution to
 https://github.com/siddsachar/row-bot, which is also licensed under the Apache

@@ -1,0 +1,39 @@
+# CI wired to LegionForge/dev-rig's shared reusable workflows, per LegionForge policy
+# that all repos (especially public ones) pass the dev-rig checks.
+#
+# Pinned to a commit SHA rather than @main -- dev-rig has no tagged release yet, and
+# dev-rig's own pipeline-hardening guidance requires SHA pinning over mutable refs
+# (see LegionForge-dev-rig-pipeline-hardening-handoff-20260531.md, P1). Bump this SHA
+# deliberately when dev-rig cuts a release tag.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    uses: LegionForge/dev-rig/.github/workflows/lint.yml@0f6301e8c03da6940ee3335790cde8a766602888 # main @ 2026-07-25
+    with:
+      source-dirs: "."
+
+  test:
+    uses: LegionForge/dev-rig/.github/workflows/test.yml@0f6301e8c03da6940ee3335790cde8a766602888 # main @ 2026-07-25
+    with:
+      coverage-source: "trust"
+      coverage-threshold: 90
+
+  sast:
+    uses: LegionForge/dev-rig/.github/workflows/sast.yml@0f6301e8c03da6940ee3335790cde8a766602888 # main @ 2026-07-25
+    with:
+      source-dirs: "."
+    permissions:
+      security-events: write
+
+  audit:
+    uses: LegionForge/dev-rig/.github/workflows/audit.yml@0f6301e8c03da6940ee3335790cde8a766602888 # main @ 2026-07-25
+
+  secrets:
+    uses: LegionForge/dev-rig/.github/workflows/secrets.yml@0f6301e8c03da6940ee3335790cde8a766602888 # main @ 2026-07-25
