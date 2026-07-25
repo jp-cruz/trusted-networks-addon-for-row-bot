@@ -1,11 +1,9 @@
 # trusted-networks-addon-for-row-bot (reference implementation)
 
-A small, generalized reference implementation of the trusted-network allowlist proposed in
+An independent, unofficial reference implementation — not affiliated with or endorsed by
+the Row-Bot maintainer — of the trusted-network allowlist proposed in
 [siddsachar/row-bot#297](https://github.com/siddsachar/row-bot/issues/297) and
 [discussion #298](https://github.com/siddsachar/row-bot/discussions/298).
-
-**Status: private staging repo, not yet published.** Content is deliberately generalized
-(no environment-specific paths, IPs, or identifiers) and ready to go public once reviewed.
 
 ## Problem
 
