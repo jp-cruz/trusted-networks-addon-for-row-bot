@@ -1,4 +1,4 @@
-# row-bot trusted-networks patch (reference implementation)
+# trusted-networks-addon-for-row-bot (reference implementation)
 
 A small, generalized reference implementation of the trusted-network allowlist proposed in
 [siddsachar/row-bot#297](https://github.com/siddsachar/row-bot/issues/297) and
@@ -44,6 +44,36 @@ export ROW_BOT_TRUSTED_NETWORKS="192.0.2.0/24,198.51.100.0/24"
 
 (Using RFC 5737 documentation ranges here as placeholders — substitute your own
 container-runtime gateway range and/or trusted local network CIDR.)
+
+## Security considerations — read before enabling
+
+This feature changes an authorization boundary. Understand these before turning it on:
+
+- **This is authorization by network position, not by identity.** Any device inside a
+  trusted range gets full access with no further check — not just the device you had in
+  mind. Only enable this for ranges you're confident are actually restricted to devices
+  you trust (see the discussion in
+  [siddsachar/row-bot#297](https://github.com/siddsachar/row-bot/issues/297) for why a
+  properly segmented network, not a flat LAN, matters here).
+- **This depends entirely on the forwarded-header check staying intact.** The trust check
+  must be paired with rejecting requests that carry `X-Forwarded-For`-style headers (see
+  `INTEGRATION.md`). Without that pairing, anyone behind a reverse proxy that passes
+  through client-supplied headers unfiltered could spoof a trusted IP and bypass this
+  entirely. Don't extract just the CIDR-matching logic without also keeping that guard.
+- **This says nothing about transport encryption.** Whether traffic to/from a trusted
+  device is encrypted (TLS, even self-signed) is a completely separate, orthogonal
+  concern — deliberately out of scope here. Trusting a network doesn't make traffic on
+  it any more or less protected in transit than it already was.
+- **IPv6 is handled, but verify your own environment.** CIDR-based trust works correctly
+  for IPv6 ranges, including devices using IPv6 privacy-extension addresses that rotate
+  periodically (you're trusting a prefix, not a single address, so rotation doesn't break
+  it). IPv4-mapped IPv6 client addresses are unwrapped automatically. Still worth
+  confirming empirically what address family/form your deployment actually presents —
+  see the debugging tip in `INTEGRATION.md`.
+- **Consider logging trust-based access.** This reference implementation doesn't log
+  anything by default. If you adopt this, consider adding a log line whenever a request
+  is granted through the trusted-network path (vs. the normal pairing flow), so there's
+  an audit trail of who's using the bypass.
 
 ## License
 

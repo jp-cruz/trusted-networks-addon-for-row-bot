@@ -64,6 +64,12 @@ def is_trusted_client_ip(host: str) -> bool:
         addr = ip_address(host)
     except ValueError:
         return False
+    # Some ASGI servers report an IPv4 client as an IPv4-mapped IPv6 address
+    # (e.g. "::ffff:192.0.2.1") depending on socket configuration. Unwrap it so IPv4
+    # trusted ranges still match -- otherwise this fails closed (silently doesn't
+    # match, not a security hole) but breaks in a confusing way.
+    if addr.version == 6 and addr.ipv4_mapped is not None:
+        addr = addr.ipv4_mapped
     if addr.is_loopback:
         return True
     return any(addr in network for network in _trusted_networks())
