@@ -10,11 +10,21 @@ A small, generalized reference implementation of the trusted-network allowlist p
 ## Problem
 
 Row-Bot's Mobile Access gate treats "local" as strictly loopback (`127.0.0.1`/`localhost`).
-That check silently never succeeds for browser traffic to a Dockerized instance, because
-container runtimes NAT the connection — the app sees a Docker-internal gateway address,
-never true loopback. Practical effect: any Dockerized deployment is permanently stuck
-behind the mobile-companion pairing flow, with no way to reach the full desktop UI, even
-from the same machine Docker is running on.
+That's too narrow for two distinct, related reasons:
+
+1. **Containerized deployments can't satisfy it at all, even from the same machine.**
+   Container runtimes NAT the connection — the app sees a Docker-internal gateway
+   address, never true loopback. Any Dockerized instance is permanently stuck behind the
+   mobile-companion pairing flow, with no way to reach the full desktop UI, even from the
+   host machine Docker is running on.
+2. **Any *other* device on your network can never satisfy it, containerized or not.**
+   Loopback fundamentally means "this exact machine" — it was never going to cover "my
+   other laptop" or "my phone" reaching a bare-metal, non-Dockerized Row-Bot instance
+   either. This is the more general case: anyone who wants full desktop-UI access from a
+   second device on their own trusted network hits the same wall, independent of Docker.
+
+This patch addresses both with the same mechanism — Docker is one common, motivating
+case (and the one that led to building this), not the whole scope.
 
 This also compounds into a full lockout for a browser session with no paired-device
 cookie yet: the only documented way to get a pairing code is a settings page that's
@@ -44,6 +54,17 @@ export ROW_BOT_TRUSTED_NETWORKS="192.0.2.0/24,198.51.100.0/24"
 
 (Using RFC 5737 documentation ranges here as placeholders — substitute your own
 container-runtime gateway range and/or trusted local network CIDR.)
+
+## Testing
+
+```sh
+pip install pytest
+pytest test_trust.py -v
+```
+
+Deterministic, no network calls — covers loopback (v4/v6), configured/unconfigured
+ranges, multiple ranges, malformed entries (must not raise), IPv4-mapped IPv6 client
+addresses matching IPv4 ranges, and mismatched address families failing closed.
 
 ## Security considerations — read before enabling
 
