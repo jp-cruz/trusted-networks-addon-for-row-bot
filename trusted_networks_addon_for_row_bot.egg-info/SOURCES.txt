@@ -1,0 +1,10 @@
+LICENSE
+NOTICE
+README.md
+pyproject.toml
+trust.py
+trusted_networks_addon_for_row_bot.egg-info/PKG-INFO
+trusted_networks_addon_for_row_bot.egg-info/SOURCES.txt
+trusted_networks_addon_for_row_bot.egg-info/dependency_links.txt
+trusted_networks_addon_for_row_bot.egg-info/requires.txt
+trusted_networks_addon_for_row_bot.egg-info/top_level.txt
